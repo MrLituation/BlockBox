@@ -1,1 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlockBox System Monitor</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+        .card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: #343a40;
+            color: white;
+            font-weight: bold;
+        }
+        .status-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        .error-log {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .status-card .card-body {
+            text-align: center;
+            padding: 20px;
+        }
+        .timestamp {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-dark bg-dark rounded mb-4">
+            <div class="container-fluid">
+                <span class="navbar-brand mb-0 h1">
+                    <i class="fas fa-box-open me-2"></i>BlockBox System Monitor
+                </span>
+                <span class="navbar-text" id="last-updated">
+                    Last updated: <span class="timestamp">Never</span>
+                </span>
+            </div>
+        </nav>
 
+        <div class="row">
+            <!-- Door Status -->
+            <div class="col-md-4">
+                <div class="card status-card">
+                    <div class="card-header">
+                        <i class="fas fa-door-closed me-2"></i>Door Status
+                    </div>
+                    <div class="card-body">
+                        <i class="fas fa-question status-icon" id="door-icon"></i>
+                        <h5 class="card-title" id="door_status">Unknown</h5>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item Status -->
+            <div class="col-md-4">
+                <div class="card status-card">
+                    <div class="card-header">
+                        <i class="fas fa-box me-2"></i>Item Status
+                    </div>
+                    <div class="card-body">
+                        <i class="fas fa-box status-icon" id="item-icon"></i>
+                        <h5 class="card-title" id="item_status">No item placed</h5>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transaction Status -->
+            <div class="col-md-4">
+                <div class="card status-card">
+                    <div class="card-header">
+                        <i class="fas fa-exchange-alt me-2"></i>Transaction Status
+                    </div>
+                    <div class="card-body">
+                        <i class="fas fa-receipt status-icon" id="transaction-icon"></i>
+                        <h5 class="card-title" id="transaction_id">None</h5>
+                        <p class="card-text" id="item_price">Price: None</p>
+                        <p class="card-text" id="item_collected">Collected: No</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Logs -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <i class="fas fa-exclamation-triangle me-2"></i>Error Logs
+            </div>
+            <div class="card-body error-log" id="error_logs">
+                <p class="text-muted">No errors to display.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        function updateStatus() {
+            $.getJSON('/system_state', function(data) {
+                // Update door status
+                $('#door_status').text(data.door_status);
+                updateIcon('door-icon', data.door_status);
+
+                // Update item status
+                $('#item_status').text(data.item_status);
+                updateIcon('item-icon', data.item_status);
+
+                // Update transaction info
+                $('#transaction_id').text(data.transaction_id || 'None');
+                $('#item_price').text('Price: ' + (data.item_price || 'None'));
+                $('#item_collected').text('Collected: ' + (data.item_collected ? 'Yes' : 'No'));
+                updateIcon('transaction-icon', data.transaction_id);
+
+                // Update error logs
+                updateErrorLogs(data.error_logs);
+
+                // Update timestamp
+                $('.timestamp').text(new Date().toLocaleTimeString());
+            });
+        }
+
+        function updateIcon(iconId, status) {
+            const icon = $('#' + iconId);
+            icon.removeClass().addClass('fas status-icon');
+            
+            switch(iconId) {
+                case 'door-icon':
+                    icon.addClass(status === 'Closed' ? 'fa-door-closed text-success' : 
+                                 status === 'Open' ? 'fa-door-open text-warning' : 
+                                 'fa-question text-secondary');
+                    break;
+                case 'item-icon':
+                    icon.addClass(status === 'Item placed' ? 'fa-box text-success' : 
+                                 'fa-box-open text-secondary');
+                    break;
+                case 'transaction-icon':
+                    icon.addClass(status ? 'fa-receipt text-primary' : 'fa-receipt text-secondary');
+                    break;
+            }
+        }
+
+        function updateErrorLogs(logs) {
+            const logContainer = $('#error_logs');
+            if (logs && logs.length > 0) {
+                logContainer.empty();
+                logs.forEach(function(log) {
+                    logContainer.append(`<div class="alert alert-danger mb-2">${log}</div>`);
+                });
+            } else {
+                logContainer.html('<p class="text-muted">No errors to display.</p>');
+            }
+        }
+
+        // Update status every 1 second
+        $(document).ready(function() {
+            updateStatus();
+            setInterval(updateStatus, 1000);
+        });
+    </script>
+</body>
+</html>

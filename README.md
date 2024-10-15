@@ -60,25 +60,23 @@ Block Box is a smart last mile locker system that solves the common problem ever
 6. **Set up .env file**
 
    # .env file
-
-   ### Telegram Bot Tokens and Chat IDs
    BUYER_TELEGRAM_TOKEN=your_buyer_bot_token
+   ###
    BUYER_CHAT_ID=your_buyer_chat_id
-
+   ###
    SELLER_TELEGRAM_TOKEN=your_seller_bot_token
+   ###
    SELLER_CHAT_ID=your_seller_chat_id
-
-   ### OTP Secret Key
-   OTP_SECRET=your_otp_secret_key
-
-   ### Blockchain Configuration
+   ###
+   OTP_SECRET=otp_secret_key (random)
+   ### 
    INFURA_URL=https://sepolia.infura.io/v3/your_infura_project_id
+   ###
    SELLER_ADDRESS=your_seller_ethereum_address
+   ###
+   API_KEY=api_key_for_flask_server (random)
 
-   ### API Key for Flask Server Authentication
-   API_KEY=your_api_key_for_flask_server
-
-7. **Run blockbox.py**
+8. **Run blockbox.py**
 
 
 

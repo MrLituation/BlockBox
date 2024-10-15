@@ -60,19 +60,19 @@ Block Box is a smart last mile locker system that solves the common problem ever
 6. **Set up .env file**
 
    # .env file
-   BUYER_TELEGRAM_TOKEN=your_buyer_bot_token
+   BUYER_TELEGRAM_TOKEN=buyer_bot_token
    ###
-   BUYER_CHAT_ID=your_buyer_chat_id
+   BUYER_CHAT_ID=buyer_chat_id (same as seller if same device)
    ###
-   SELLER_TELEGRAM_TOKEN=your_seller_bot_token
+   SELLER_TELEGRAM_TOKEN=seller_bot_token
    ###
-   SELLER_CHAT_ID=your_seller_chat_id
+   SELLER_CHAT_ID=seller_chat_id (same as buyer if same device)
    ###
    OTP_SECRET=otp_secret_key (random)
    ### 
-   INFURA_URL=https://sepolia.infura.io/v3/your_infura_project_id
+   INFURA_URL=https://sepolia.infura.io/v3/infura_project_id (replace with assigned ID from INFURA)
    ###
-   SELLER_ADDRESS=your_seller_ethereum_address
+   SELLER_ADDRESS=seller_ethereum_address
    ###
    API_KEY=api_key_for_flask_server (random)
 

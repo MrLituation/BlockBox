@@ -7,11 +7,6 @@ Block Box is a smart last mile locker system that solves the common problem ever
 - [Features](#features)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
-- [Hardware Setup](#hardware-setup)
-- [Configuration](#configuration)
-- [Running the Application](#running-the-application)
-- [Usage](#usage)
-- [License](#license)
 
 ## Features
 
